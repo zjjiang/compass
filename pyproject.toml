@@ -1,0 +1,24 @@
+[project]
+name = "compass"
+version = "0.1.0"
+description = "compass · 个人 OKR 存储系统：快照版本 + 门禁写入，供 OpenClaw 经 MCP 接入"
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp>=2.0.0",
+    "fastapi>=0.115",
+    "uvicorn>=0.34",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.8",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
