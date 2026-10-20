@@ -31,7 +31,15 @@ async def main() -> None:
         )
         async with Client(transport) as client:
             tools = {t.name for t in await client.list_tools()}
-            assert tools == {"get_active_okr", "list_versions", "get_version", "review", "propose"}, tools
+            assert tools == {
+                "get_active_okr",
+                "list_versions",
+                "get_version",
+                "review",
+                "propose",
+                "approve_proposal",
+                "reject_proposal",
+            }, tools
             print(f"1. 工具清单 OK：{sorted(tools)}")
 
             state = (await client.call_tool("get_active_okr")).data
