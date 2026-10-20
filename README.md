@@ -59,12 +59,16 @@ stdio 方式接入（与 deputy / steward 同构，龙虾与 compass 同机）�
 
 1. 龙虾读 `get_active_okr()` / `review()` 备料，判断该改什么。
 2. 龙虾 `propose(action, args, reason)` —— 扣进队列，**不生效**。
-3. 你在看板（`http://127.0.0.1:8902`）点批准 / 驳回；批准后系统派发到真源，
-   规则不过（progress 越界、版本不存在等）会拒，提议保持 pending。
-4. 分身与人类分工：**分身走门禁，人类直写**（审批、切版本是人类的直写端点）。
+3. 你拍板，两条通道任选：
+   - **对话内**：直接说"批准/驳回第 N 条"，龙虾代调 `approve_proposal` / `reject_proposal`；
+   - **看板**：打开 `http://127.0.0.1:8902` 点批准 / 驳回。
+   批准后系统派发到真源，规则不过（progress 越界、版本不存在等）会拒，提议保持 pending。
+4. 分身与人类分工：**分身自主写只有 propose**；approve/reject 是你的专属动作，
+   分身仅在你明确拍板时代为调用，绝不自批。
 
 MCP 工具全集：`get_active_okr` · `list_versions` · `get_version` · `review` ·
-`propose`（唯一写入口，动作白名单见 `app/domain.py::PROPOSAL_ACTIONS`）。
+`propose`（分身唯一自主写入口，动作白名单见 `app/domain.py::PROPOSAL_ACTIONS`）·
+`approve_proposal` / `reject_proposal`（用户专属，仅代为调用）。
 
 ## 数据不出墙
 

@@ -2,7 +2,9 @@
 
 > 方向盘（compass）—— deputy（事业）/ steward（生活）之后的第三个同构后端，
 > 管**方向**：个人 OKR 的存储、快照版本与回顾。核心：**分身提议 → 你批准 → 快照定格**。
-> 「人类做门禁」是不可动摇的设计：MCP 层只有读 + propose，没有任何直写工具。
+> 「人类做门禁」是不可动摇的设计：分身对真源的自主写操作只有 `propose`；
+> `approve_proposal` / `reject_proposal` 是用户专属动作（看板或对话里明确拍板，
+> 分身仅代为调用，绝不自批）。
 
 ## 与 deputy / steward 的关系（同构约定）
 
@@ -31,7 +33,7 @@
 
 ```bash
 uv sync                                  # 装依赖
-uv run pytest -q                         # 测试（41 个，改完必须全绿）
+uv run pytest -q                         # 测试（46 个，改完必须全绿）
 uv run ruff check .                      # lint
 uv run python scripts/smoke_stdio.py     # stdio 全链路冒烟（动 MCP/门禁后必跑）
 uv run uvicorn app.api:app --port 8902   # 看板（注意 8901 是 steward，8899 是 deputy）
@@ -39,7 +41,8 @@ uv run uvicorn app.api:app --port 8902   # 看板（注意 8901 是 steward，88
 
 ## 契约红线（改坏了会静默腐蚀信任的地方）
 
-- **门禁不泄漏**：MCP 工具名 ∩ 写操作 = 只有 `propose`。
+- **门禁不泄漏**：分身对真源的自主写入口 = 只有 `propose`；
+  `approve_proposal` / `reject_proposal` 是用户专属动作（仅代为调用，绝不自批）。
   `tests/test_mcp_contract.py` 有契约测试，新增工具先想清楚该不该让分身直写。
 - **至多一个 active**：任何版本状态变更必须在 `db.transaction()` 内完成
   （先归档旧的，再激活新的），事务外改状态是 bug。
